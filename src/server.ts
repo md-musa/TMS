@@ -8,11 +8,11 @@ let server: Server;
 
 const main = async () => {
   try {
-    await mongoose.connect(config.database_url as string);
+    await mongoose.connect(config.DATABASE_URL as string);
     logger.info("✅ Database connected successfully");
 
-    server = app.listen(config.port, () => {
-      logger.info(`🚀 Server running on port ${config.port}`);
+    server = app.listen(config.PORT, () => {
+      logger.info(`🚀 Server running on port ${config.PORT}`);
     });
   } catch (error) {
     logger.error("❌ Database connection failed", error);
