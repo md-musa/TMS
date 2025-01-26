@@ -11,7 +11,6 @@ const generateToken = (data: Partial<IUser> & { _id: Schema.Types.ObjectId }, se
     return jwt.sign({ ...data }, secret, { expiresIn: expiration });
 };
 
-// Register User Logic
 const registerUser = async (userInfo: IUser) => {
   const existingUser = await UserModel.findOne({ email: userInfo.email });
   if (existingUser) throw ApiError.badRequest("User already exists");
@@ -29,7 +28,7 @@ const registerUser = async (userInfo: IUser) => {
   return { accessToken, refreshToken, user: { name, email, role, phoneNumber, routeId } };
 };
 
-// Login User Logic
+
 const login = async (userInfo: { email: string; password: string }) => {
   const user = await UserModel.findOne({ email: userInfo.email });
   if (!user) throw ApiError.notFound("User not found");

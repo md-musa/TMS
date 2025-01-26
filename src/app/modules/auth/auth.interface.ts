@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { USER_ROLES } from "../../../constants/roles.constants";
+import { USER_ROLES } from "../../../constants";
 
 export interface IUser{
     name: string;

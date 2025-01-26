@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { USER_ROLES } from "../../../constants/roles.constants";
+import { USER_ROLES } from "../../../constants";
 
 const register = z.object({
   body: z.object({

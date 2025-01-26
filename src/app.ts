@@ -5,6 +5,8 @@ import express, { Application, NextFunction, Request, Response } from 'express';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import routeNotFoundError from './app/middlewares/routeNotFoundError';
 import { AuthRouter } from './app/modules/auth/auth.route';
+import { BusRouter } from './app/modules/bus/bus.route';
+import { RouteRouter } from './app/modules/route/route.route';
 
 const app: Application = express();
 
@@ -24,6 +26,8 @@ app.get('/', (req:Request, res:Response) => {
 });
 
 app.use('/api/v1/auth', AuthRouter);
+app.use('/api/v1/buses', BusRouter);
+app.use('/api/v1/routes', RouteRouter);
 app.use(globalErrorHandler);
 app.use(routeNotFoundError);
 
