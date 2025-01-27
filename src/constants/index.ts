@@ -16,3 +16,15 @@ export enum STUDENT_DENSITY {
     MEDIUM = 'medium',
     HIGH = 'high',
 }
+
+export enum TRIP_STATUS {
+    SCHEDULED = 'scheduled',
+    ONGOING = 'ongoing',
+    COMPLETED = 'completed',
+    CANCELED = 'canceled',
+}
+
+export enum BUS_TYPE {
+    STUDENT = 'student',
+    FACULTY = 'faculty',
+}
