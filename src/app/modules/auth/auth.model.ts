@@ -19,27 +19,27 @@ const userSchema = new Schema<IUser>(
     },
     phoneNumber: {
       type: String,
-      required: true,
+      required: false,
     },
     password: {
       type: String,
       required: true,
-    }, 
+    },
     houseLocation: {
-        latitude: {
-            type: Number,
-            required: true,
-        },
-        longitude: {
-            type: Number,
-            required: true,
-        },
+      latitude: {
+        type: Number,
+        required: false,
+      },
+      longitude: {
+        type: Number,
+        required: false,
+      },
     },
     routeId: {
-        type: Schema.Types.ObjectId,
-        ref: "Route",
-        required: true,
-    }
+      type: Schema.Types.ObjectId,
+      ref: "Route",
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -47,10 +47,7 @@ const userSchema = new Schema<IUser>(
 );
 
 userSchema.pre("save", async function (next) {
-  this.password = await bcrypt.hash(
-    this.password,
-    Number(config.BCRYPT_SALT_ROUNDS)
-  );
+  this.password = await bcrypt.hash(this.password, Number(config.BCRYPT_SALT_ROUNDS));
 
   next();
 });

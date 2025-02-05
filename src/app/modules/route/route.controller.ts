@@ -13,7 +13,17 @@ const addRoute = async (req: Request, res: Response) => {
     data: newRoute,
   })
 };
+const getRoutes = async (req: Request, res: Response) => {
+  const routes = await RouteService.getRoutes();
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.CREATED,
+    message: "Routes fetches successfully",
+    data: routes,
+  })
+};
 
 export const RouteController = {
   addRoute,
+  getRoutes
 };

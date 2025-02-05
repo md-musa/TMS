@@ -6,6 +6,12 @@ const create = async (route: IRoute) => {
   return newRoute;
 };
 
+const getRoutes = async () => {
+  const routes = await RouteModel.find();
+  return routes;
+};
+
 export const RouteService = {
    create,
+   getRoutes
 };

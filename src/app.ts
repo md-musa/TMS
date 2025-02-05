@@ -9,6 +9,11 @@ import { BusRouter } from "./app/modules/bus/bus.route";
 import { RouteRouter } from "./app/modules/route/route.route";
 import { TripRouter } from "./app/modules/trip/trip.route";
 import { logger } from "./shared/logger";
+import { SOCKET_EVENTS } from "./constants";
+import { BusModel } from "./app/modules/bus/bus.model";
+import ApiError from "./errors/ApiError";
+import { stat } from "fs";
+import { io } from "./server";
 
 const app: Application = express();
 app.use(cors());
@@ -45,17 +50,42 @@ export const socketHandler = (socket: any) => {
   console.log(`🟢 New client connected: ${socket.id}`);
 
   // 1️⃣ User joins a route-specific room
-  socket.on("join-route", (routeId: string) => {
+  socket.on(SOCKET_EVENTS.JOIN_ROUTE, (routeId: string) => {
     socket.join(routeId);
     console.log(`👥 Client ${socket.id} joined route: ${routeId}`);
   });
 
   // 2️⃣ Bus broadcasts location updates
-  socket.on("broadcast-location", ({ routeId, location }) => {
-    console.log(`📍 Bus on route ${routeId} shared location:`, location);
+  socket.on(SOCKET_EVENTS.BROADCAST_BUS_LOCATION, async (data: any) => {
+    const { routeId, busId, hostId, busType, latitude, longitude } = data;
 
-    // Broadcast to all users in the same route room
-    socket.to(routeId).emit("bus-location-update", { location, routeId });
+    try {
+      const busInfo = await BusModel.findById(busId);
+      
+      if (!busInfo) {
+        throw ApiError.notFound(`❌ Bus with ID ${busId} not found`);
+      }
+
+      const busData = {
+        busId,
+        name: busInfo.name,
+        serialNumber: busInfo.serialNumber,
+        capacity: busInfo.capacity,
+        status: busInfo.status,
+        latitude,
+        longitude,
+        busType,
+        hostId,
+      };
+
+      io.to(routeId).emit("bus-location-update", busData);
+
+      console.log(
+        `📡 Broadcasted bus ${busId} (${busInfo.name + "-" + busInfo.serialNumber}) location on route ${routeId}`
+      );
+    } catch (error) {
+      console.error("❌ Error fetching bus data:", error);
+    }
   });
 
   // 3️⃣ User requests live bus locations

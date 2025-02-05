@@ -13,7 +13,8 @@ const register = z.object({
     phoneNumber: z
       .string()
       .length(11, "Phone number must be 11 digits long")
-      .startsWith("01", "Phone number must start with 01"),
+      .startsWith("01", "Phone number must start with 01")
+      .optional(),
     houseLocation: z
       .object({
         latitude: z.number().optional(),

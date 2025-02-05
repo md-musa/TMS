@@ -28,3 +28,11 @@ export enum BUS_TYPE {
     STUDENT = 'student',
     FACULTY = 'faculty',
 }
+
+export enum SOCKET_EVENTS {
+    JOIN_ROUTE = 'join-route',
+    BROADCAST_BUS_LOCATION = 'broadcast-bus-location',
+    VIEW_LOCATIONS = 'view-locations',
+    REQUEST_BUS_LOCATION = 'request-bus-location',
+    BUS_LOCATION_UPDATE = 'bus-location-update',
+}
