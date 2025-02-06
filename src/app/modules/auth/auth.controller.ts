@@ -31,6 +31,17 @@ const login = async (req: Request, res: Response): Promise<void> => {
     data: { accessToken, user },
   });
 };
+// const getUserProfileInfo = async (req: Request, res: Response): Promise<void> => {
+//   const {userId}
+
+  
+//   sendResponse(res, {
+//     statusCode: StatusCodes.OK,
+//     success: true,
+//     message: "User logged in successfully",
+//     data: { accessToken, user },
+//   });
+// };
 
 export const AuthController = {
   registerUser,

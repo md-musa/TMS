@@ -14,6 +14,7 @@ import { BusModel } from "./app/modules/bus/bus.model";
 import ApiError from "./errors/ApiError";
 import { stat } from "fs";
 import { io } from "./server";
+import { ScheduleRouter } from "./app/modules/schedule/schedule.route";
 
 const app: Application = express();
 app.use(cors());
@@ -40,6 +41,7 @@ app.use("/api/v1/auth", AuthRouter);
 app.use("/api/v1/buses", BusRouter);
 app.use("/api/v1/routes", RouteRouter);
 app.use("/api/v1/trips", TripRouter);
+app.use("/api/v1/schedules", ScheduleRouter);
 app.use(globalErrorHandler);
 app.use(routeNotFoundError);
 // ---------------------------
@@ -61,7 +63,7 @@ export const socketHandler = (socket: any) => {
 
     try {
       const busInfo = await BusModel.findById(busId);
-      
+
       if (!busInfo) {
         throw ApiError.notFound(`❌ Bus with ID ${busId} not found`);
       }

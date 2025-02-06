@@ -8,7 +8,7 @@ import { Schema } from "mongoose";
 
 // Helper function to generate JWT tokens
 const generateToken = (data: Partial<IUser> & { _id: Schema.Types.ObjectId }, secret: Secret, expiration: string) => {
-    return jwt.sign({ ...data }, secret, { expiresIn: expiration });
+  return jwt.sign({ ...data }, secret, { expiresIn: expiration });
 };
 
 const registerUser = async (userInfo: IUser) => {
@@ -28,7 +28,6 @@ const registerUser = async (userInfo: IUser) => {
   return { accessToken, refreshToken, user: { name, email, role, phoneNumber, routeId } };
 };
 
-
 const login = async (userInfo: { email: string; password: string }) => {
   const user = await UserModel.findOne({ email: userInfo.email });
   if (!user) throw ApiError.notFound("User not found");
@@ -47,4 +46,13 @@ const login = async (userInfo: { email: string; password: string }) => {
   return { accessToken, refreshToken, user: { name, email, role, phoneNumber, routeId } };
 };
 
-export const AuthService = { registerUser, login };
+const getProfileInfo = async (userId: string) => {
+  const user = await UserModel.findById(userId);
+  if (user) throw ApiError.notFound("User not found");
+
+  // user = user.populate("routeId");
+
+  return user;
+};
+
+export const AuthService = { registerUser, login, getProfileInfo };

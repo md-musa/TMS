@@ -7,5 +7,7 @@ const router = express.Router();
 
 router.get("/", BusController.getBuses);
 router.post("/", validateRequest(BusValidation.create), BusController.createBus);
+// get single bus details
+
 
 export const BusRouter = router;
