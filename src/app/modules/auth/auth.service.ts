@@ -16,7 +16,7 @@ const registerUser = async (userInfo: IUser) => {
   if (existingUser) throw ApiError.badRequest("User already exists");
 
   // Create new user
-  const user = await UserModel.create(userInfo);
+  const user = await (await UserModel.create(userInfo)).populate("routeId");
   const { _id, name, email, role, phoneNumber, routeId } = user;
 
   const { ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE } = config.JWT;
@@ -29,7 +29,8 @@ const registerUser = async (userInfo: IUser) => {
 };
 
 const login = async (userInfo: { email: string; password: string }) => {
-  const user = await UserModel.findOne({ email: userInfo.email });
+  const user = await UserModel.findOne({ email: userInfo.email }).populate('routeId')
+  console.log(user);
   if (!user) throw ApiError.notFound("User not found");
 
   const isPasswordValid = await bcrypt.compare(userInfo.password, user.password);
