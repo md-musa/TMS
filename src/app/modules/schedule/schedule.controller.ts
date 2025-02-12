@@ -23,10 +23,10 @@ const create = async (req: Request, res: Response) => {
 const getAllSchedules = async (req: Request, res: Response) => {
   const result = await ScheduleService.getAllSchedules();
 
-  for (let i = 0; i < result.length; i++) {
-    result[i].time = format(parse(result[i].time, "HH:mm", new Date()), "hh:mm a");
-    console.log(result[i].time);
-  }
+  // for (let i = 0; i < result.length; i++) {
+  //   result[i].time = format(parse(result[i].time, "HH:mm", new Date()), "hh:mm a");
+  //   console.log(result[i].time);
+  // }
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
@@ -37,15 +37,16 @@ const getAllSchedules = async (req: Request, res: Response) => {
 };
 
 const getAllSchedulesByRoute = async (req: Request, res: Response) => {
-  const routeId: string = req.body.routeId;
+  const { routeId, day } = req.query;
+  console.log("Route id ", routeId, day);
   if (!routeId) throw ApiError.badRequest("Route id is required");
 
-  const result = await ScheduleService.getAllSchedulesByRoute(routeId);
+  const result = await ScheduleService.getAllSchedulesByRoute(routeId as string, day as string);
 
-  for (let i = 0; i < result.length; i++) {
-    result[i].time = format(parse(result[i].time, "HH:mm", new Date()), "hh:mm a");
-    console.log(result[i].time);
-  }
+  // for (let i = 0; i < result.length; i++) {
+  //   result[i].time = format(parse(result[i].time, "HH:mm", new Date()), "hh:mm a");
+  //   console.log(result[i].time);
+  // }
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
