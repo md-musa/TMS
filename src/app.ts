@@ -67,14 +67,16 @@ export const socketHandler = (socket: any) => {
       const hostInfo = await UserModel.findById(hostId).select("name");
       const currentlyConnectedUserCount = io.sockets.adapter.rooms.get(routeId)?.size || 0;
 
+      const timestamp = new Date().toISOString();
+
       const responseData = {
         routeId,
         bus: {
           id: busId,
-          name: busInfo.name,
-          serialNumber: busInfo.serialNumber,
-          capacity: busInfo.capacity,
-          status: busInfo.status,
+          name: busInfo?.name || "Unknown Bus",
+          serialNumber: busInfo?.serialNumber || "N/A",
+          capacity: busInfo?.capacity ?? 0,
+          status: busInfo?.status || "Inactive",
           type: busType,
         },
         location: {
@@ -83,10 +85,15 @@ export const socketHandler = (socket: any) => {
         },
         host: {
           id: hostId,
-          name: hostInfo ? hostInfo.name : "Unknown",
+          name: hostInfo?.name || "Host Not Available",
         },
-        currentlyConnectedUserCount,
-        timestamp: new Date().toISOString(),
+        trip: {
+          status: data?.tripStatus || "Scheduled",
+          departureTime: data?.departureTime || timestamp,
+          direction: data?.direction || "to_campus",
+        },
+        currentlyConnectedUserCount, // Renamed for clarity
+        timestamp,
       };
 
       io.to(routeId).emit(SOCKET_EVENTS.BUS_LOCATION_UPDATE, responseData);
