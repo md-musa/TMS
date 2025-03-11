@@ -4,11 +4,13 @@ import { IUser } from "./auth.interface";
 import jwt, { Secret } from "jsonwebtoken";
 import UserModel from "./auth.model";
 import config from "../../../config";
-import { Schema } from "mongoose";
+import mongoose, { Types } from "mongoose";
+
+const userId: Types.ObjectId = new mongoose.Types.ObjectId();
 
 // Helper function to generate JWT tokens
-const generateToken = (data: Partial<IUser> & { _id: Schema.Types.ObjectId }, secret: Secret, expiration: string) => {
-  return jwt.sign({ ...data }, secret, { expiresIn: expiration });
+const generateToken = (data: Partial<IUser> & { _id: Types.ObjectId }, secret: Secret, expiration: string) => {
+  return jwt.sign({ ...data, _id: data._id.toString() }, secret, { expiresIn: expiration });
 };
 
 const registerUser = async (userInfo: IUser) => {
@@ -22,14 +24,14 @@ const registerUser = async (userInfo: IUser) => {
   const { ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE } = config.JWT;
 
   // Generate tokens
-  const accessToken = generateToken({ _id: _id as Schema.Types.ObjectId, email, role }, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE);
-  const refreshToken = generateToken({ _id: _id as Schema.Types.ObjectId, email, role }, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
+  const accessToken = generateToken({ _id: _id as Types.ObjectId, email, role }, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE);
+  const refreshToken = generateToken({ _id: _id as Types.ObjectId, email, role }, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
 
   return { accessToken, refreshToken, user: { name, email, role, phoneNumber, routeId } };
 };
 
 const login = async (userInfo: { email: string; password: string }) => {
-  const user = await UserModel.findOne({ email: userInfo.email }).populate('routeId');
+  const user = await UserModel.findOne({ email: userInfo.email }).populate("routeId");
   if (!user) throw ApiError.notFound("User not found");
 
   const isPasswordValid = await bcrypt.compare(userInfo.password, user.password);
@@ -40,8 +42,8 @@ const login = async (userInfo: { email: string; password: string }) => {
   const { ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE } = config.JWT;
 
   // Generate tokens
-  const accessToken = generateToken({ _id: _id as Schema.Types.ObjectId, email, role }, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE);
-  const refreshToken = generateToken({ _id: _id as Schema.Types.ObjectId, email, role }, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
+  const accessToken = generateToken({ _id: _id as Types.ObjectId, email, role }, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE);
+  const refreshToken = generateToken({ _id: _id as Types.ObjectId, email, role }, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
 
   return { accessToken, refreshToken, user: { name, email, role, phoneNumber, routeId } };
 };
