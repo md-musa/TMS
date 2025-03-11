@@ -8,7 +8,7 @@ import { Schema } from "mongoose";
 
 // Helper function to generate JWT tokens
 const generateToken = (data: Partial<IUser> & { _id: Schema.Types.ObjectId }, secret: Secret, expiration: string) => {
-  return jwt.sign({ ...data }, secret, { expiresIn: expiration });
+  return jwt.sign({ ...data }, secret as string, { expiresIn: expiration as string });
 };
 
 const registerUser = async (userInfo: IUser) => {
