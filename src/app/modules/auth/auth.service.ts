@@ -8,7 +8,7 @@ import { Schema } from "mongoose";
 
 // Helper function to generate JWT tokens
 const generateToken = (data: Partial<IUser> & { _id: Schema.Types.ObjectId }, secret: Secret, expiration: string) => {
-  return jwt.sign({ ...data }, secret as string, { expiresIn: expiration as string });
+  return jwt.sign({ ...data }, secret, { expiresIn: expiration });
 };
 
 const registerUser = async (userInfo: IUser) => {
@@ -22,15 +22,14 @@ const registerUser = async (userInfo: IUser) => {
   const { ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE } = config.JWT;
 
   // Generate tokens
-  const accessToken = generateToken({ _id, email, role }, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE);
-  const refreshToken = generateToken({ _id, email, role }, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
+  const accessToken = generateToken({ _id: _id as Schema.Types.ObjectId, email, role }, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE);
+  const refreshToken = generateToken({ _id: _id as Schema.Types.ObjectId, email, role }, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
 
   return { accessToken, refreshToken, user: { name, email, role, phoneNumber, routeId } };
 };
 
 const login = async (userInfo: { email: string; password: string }) => {
-  const user = await UserModel.findOne({ email: userInfo.email }).populate('routeId')
-  console.log(user);
+  const user = await UserModel.findOne({ email: userInfo.email }).populate('routeId');
   if (!user) throw ApiError.notFound("User not found");
 
   const isPasswordValid = await bcrypt.compare(userInfo.password, user.password);
@@ -41,17 +40,15 @@ const login = async (userInfo: { email: string; password: string }) => {
   const { ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE } = config.JWT;
 
   // Generate tokens
-  const accessToken = generateToken({ _id, email, role }, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE);
-  const refreshToken = generateToken({ _id, email, role }, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
+  const accessToken = generateToken({ _id: _id as Schema.Types.ObjectId, email, role }, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE);
+  const refreshToken = generateToken({ _id: _id as Schema.Types.ObjectId, email, role }, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
 
   return { accessToken, refreshToken, user: { name, email, role, phoneNumber, routeId } };
 };
 
 const getProfileInfo = async (userId: string) => {
   const user = await UserModel.findById(userId);
-  if (user) throw ApiError.notFound("User not found");
-
-  // user = user.populate("routeId");
+  if (!user) throw ApiError.notFound("User not found");
 
   return user;
 };
