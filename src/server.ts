@@ -14,7 +14,7 @@ const main = async () => {
     logger.info("✅ Database connected successfully");
 
     // Start Express server
-    expressServer = app.listen(config.PORT, () => {
+    expressServer = app.listen(config.PORT || 5000, () => {
       logger.info(`🚀 Server running on port ${config.PORT}`);
     });
 
