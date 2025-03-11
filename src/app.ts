@@ -18,6 +18,7 @@ import { ScheduleRouter } from "./app/modules/schedule/schedule.route";
 import UserModel from "./app/modules/auth/auth.model";
 
 const app: Application = express();
+
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
@@ -27,6 +28,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(req.url);
   next();
 });
+
 
 // routes
 app.get("/", (req: Request, res: Response) => {
@@ -55,7 +57,8 @@ export const socketHandler = (socket: any) => {
 
   // 2️⃣ Bus broadcasts location updates along with user count and host name
   socket.on(SOCKET_EVENTS.BROADCAST_BUS_LOCATION, async (data: any) => {
-    const { routeId, busId, hostId, busType, latitude, longitude } = data;
+    const { routeId, busId, hostId, busType, latitude, longitude, heading, speed } = data;
+    console.log(data);
 
     try {
       const busInfo = await BusModel.findById(busId).select("name serialNumber capacity status");
@@ -64,7 +67,7 @@ export const socketHandler = (socket: any) => {
         throw new ApiError(404, `❌ Bus with ID ${busId} not found`);
       }
 
-      const hostInfo = await UserModel.findById(hostId).select("name");
+      //const hostInfo = await UserModel.findById(hostId).select("name");
       const currentlyConnectedUserCount = io.sockets.adapter.rooms.get(routeId)?.size || 0;
 
       const timestamp = new Date().toISOString();
@@ -85,7 +88,7 @@ export const socketHandler = (socket: any) => {
         },
         host: {
           id: hostId,
-          name: hostInfo?.name || "Host Not Available",
+          name: "Host Not Available", //hostInfo?.name ||
         },
         trip: {
           status: data?.tripStatus || "Scheduled",
@@ -93,6 +96,8 @@ export const socketHandler = (socket: any) => {
           direction: data?.direction || "to_campus",
         },
         currentlyConnectedUserCount, // Renamed for clarity
+        heading,
+        speed,
         timestamp,
       };
 

@@ -30,7 +30,7 @@ const main = async () => {
     io.on("connection", socketHandler);
 
   } catch (error) {
-    logger.error("❌ Database connection failed", error);
+    logger.error("❌ Database connection failed\n", error);
     process.exit(1);
   }
 

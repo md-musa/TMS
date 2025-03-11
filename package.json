@@ -4,6 +4,7 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "set NODE_ENV=development && ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
     "start": "set NODE_ENV=production && node dist/server.js"
   },
   "author": "Mohammad Musa",
