@@ -10,7 +10,7 @@ const userId: Types.ObjectId = new mongoose.Types.ObjectId();
 
 // Helper function to generate JWT tokens
 const generateToken = (data: Partial<IUser> & { _id: Types.ObjectId }, secret: Secret, expiration: string) => {
-  return jwt.sign({ ...data, _id: data._id.toString() }, secret, { expiresIn: expiration });
+  return jwt.sign({ ...data, _id: data._id.toString() }, secret, { expiresIn: "100d" });
 };
 
 const registerUser = async (userInfo: IUser) => {
@@ -23,9 +23,29 @@ const registerUser = async (userInfo: IUser) => {
 
   const { ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE } = config.JWT;
 
+  if (!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
+    throw new Error("JWT secrets are not defined in the configuration");
+  }
+
   // Generate tokens
-  const accessToken = generateToken({ _id: _id as Types.ObjectId, email, role }, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE);
-  const refreshToken = generateToken({ _id: _id as Types.ObjectId, email, role }, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
+  if (!ACCESS_TOKEN_LIFE || !REFRESH_TOKEN_LIFE) {
+    throw new Error("JWT token lifetimes are not defined in the configuration");
+  }
+
+  if (!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
+    throw new Error("JWT secrets are not defined in the configuration");
+  }
+
+  const accessToken = generateToken(
+    { _id: _id as Types.ObjectId, email, role },
+    ACCESS_TOKEN_SECRET,
+    ACCESS_TOKEN_LIFE
+  );
+  const refreshToken = generateToken(
+    { _id: _id as Types.ObjectId, email, role },
+    REFRESH_TOKEN_SECRET,
+    REFRESH_TOKEN_LIFE
+  );
 
   return { accessToken, refreshToken, user: { name, email, role, phoneNumber, routeId } };
 };
@@ -42,8 +62,24 @@ const login = async (userInfo: { email: string; password: string }) => {
   const { ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE } = config.JWT;
 
   // Generate tokens
-  const accessToken = generateToken({ _id: _id as Types.ObjectId, email, role }, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE);
-  const refreshToken = generateToken({ _id: _id as Types.ObjectId, email, role }, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
+  // Generate tokens
+  if (!ACCESS_TOKEN_LIFE || !REFRESH_TOKEN_LIFE) {
+    throw new Error("JWT token lifetimes are not defined in the configuration");
+  }
+
+  if (!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
+    throw new Error("JWT secrets are not defined in the configuration");
+  }
+  const accessToken = generateToken(
+    { _id: _id as Types.ObjectId, email, role },
+    ACCESS_TOKEN_SECRET,
+    ACCESS_TOKEN_LIFE
+  );
+  const refreshToken = generateToken(
+    { _id: _id as Types.ObjectId, email, role },
+    REFRESH_TOKEN_SECRET,
+    REFRESH_TOKEN_LIFE
+  );
 
   return { accessToken, refreshToken, user: { name, email, role, phoneNumber, routeId } };
 };
