@@ -8,13 +8,15 @@ import { logger } from "./shared/logger";
 export let expressServer: ExpressServer;
 export let io: SocketIOServer;
 
+const port = process.env.PORT || 5000;
+
 const main = async () => {
   try {
     await mongoose.connect(config.DATABASE_URL as string);
     logger.info("✅ Database connected successfully");
 
     // Start Express server
-    expressServer = app.listen(config.PORT || 5000, () => {
+    expressServer = app.listen(port, () => {
       logger.info(`🚀 Server running on port ${config.PORT}`);
     });
 
