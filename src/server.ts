@@ -8,16 +8,17 @@ import { logger } from "./shared/logger";
 export let expressServer: ExpressServer;
 export let io: SocketIOServer;
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 
 const main = async () => {
   try {
     await mongoose.connect(config.DATABASE_URL as string);
-    logger.info("✅ Database connected successfully");
+    console.log("✅ Database connected successfully");
 
     // Start Express server
+    console.log("Using port:", port);
     expressServer = app.listen(port, () => {
-      logger.info(`🚀 Server running on port ${config.PORT}`);
+      console.log(`🚀 Server running on port ${port}`);
     });
 
     // Initialize Socket.IO
@@ -32,7 +33,7 @@ const main = async () => {
     io.on("connection", socketHandler);
 
   } catch (error) {
-    logger.error("❌ Database connection failed\n", error);
+    console.log("❌ Database connection failed\n", error);
     process.exit(1);
   }
 
