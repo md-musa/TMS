@@ -1,12 +1,20 @@
 /* eslint-disable no-undef */
-import dotenv from 'dotenv';
-import path from 'path';
+import dotenv from "dotenv";
+import path from "path";
+const environment = process.env.NODE_ENV || "development";
 
-dotenv.config({ path: path.join(process.cwd(), '.env') });
+const envFilePath = path.join(process.cwd(), environment === "development" ? "development.env" : "production.env");
+const result = dotenv.config({ path: envFilePath });
+
+if (result.error) {
+  console.error(`Failed to load environment file at ${envFilePath}:`, result.error);
+} else {
+  console.log(`Environment file loaded successfully from ${envFilePath}`);
+}
 
 export default {
-  ENV: process.env.NODE_ENV || 'development',
-  PORT: process.env.PORT || 5000,
+  ENV: process.env.NODE_ENV,
+  PORT: process.env.PORT,
   DATABASE_URL: process.env.DATABASE_URL,
   BCRYPT_SALT_ROUNDS: process.env.BCRYPT_SALT_ROUNDS,
   JWT: {
