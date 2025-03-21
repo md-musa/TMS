@@ -17,7 +17,7 @@ const getRoutes = async (req: Request, res: Response) => {
   const routes = await RouteService.getRoutes();
   sendResponse(res, {
     success: true,
-    statusCode: StatusCodes.CREATED,
+    statusCode: StatusCodes.OK,
     message: "Routes fetches successfully",
     data: routes,
   })

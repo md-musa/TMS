@@ -16,6 +16,7 @@ import { stat } from "fs";
 import { io } from "./server";
 import { ScheduleRouter } from "./app/modules/schedule/schedule.route";
 import UserModel from "./app/modules/auth/auth.model";
+import { broadcastLocation } from "./app/socket/broadcast";
 
 const app: Application = express();
 
@@ -28,7 +29,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(req.url);
   next();
 });
-
 
 // routes
 app.get("/", (req: Request, res: Response) => {
@@ -52,64 +52,12 @@ export const socketHandler = (socket: any) => {
   // 1️⃣ User joins a route-specific room
   socket.on(SOCKET_EVENTS.JOIN_ROUTE, (routeId: string) => {
     socket.join(routeId);
-    console.log(`👥 Client ${socket.id} joined route: ${routeId}`);
+    const currUserCnt = io.sockets.adapter.rooms.get(routeId)?.size;
+    console.log(`👥 Client ${socket.id} joined; cnt: ${currUserCnt}`);
   });
 
   // 2️⃣ Bus broadcasts location updates along with user count and host name
-  socket.on(SOCKET_EVENTS.BROADCAST_BUS_LOCATION, async (data: any) => {
-    const { routeId, busId, hostId, busType, latitude, longitude, heading, speed } = data;
-    console.log(data);
-
-    try {
-      const busInfo = await BusModel.findById(busId).select("name serialNumber capacity status");
-
-      if (!busInfo) {
-        throw new ApiError(404, `❌ Bus with ID ${busId} not found`);
-      }
-
-      //const hostInfo = await UserModel.findById(hostId).select("name");
-      const currentlyConnectedUserCount = io.sockets.adapter.rooms.get(routeId)?.size || 0;
-
-      const timestamp = new Date().toISOString();
-
-      const responseData = {
-        routeId,
-        bus: {
-          id: busId,
-          name: busInfo?.name || "Unknown Bus",
-          serialNumber: busInfo?.serialNumber || "N/A",
-          capacity: busInfo?.capacity ?? 0,
-          status: busInfo?.status || "Inactive",
-          type: busType,
-        },
-        location: {
-          latitude,
-          longitude,
-        },
-        host: {
-          id: hostId,
-          name: "Host Not Available", //hostInfo?.name ||
-        },
-        trip: {
-          status: data?.tripStatus || "Scheduled",
-          departureTime: data?.departureTime || timestamp,
-          direction: data?.direction || "to_campus",
-        },
-        currentlyConnectedUserCount, // Renamed for clarity
-        heading,
-        speed,
-        timestamp,
-      };
-
-      io.to(routeId).emit(SOCKET_EVENTS.BUS_LOCATION_UPDATE, responseData);
-
-      console.log(
-        `📡 Broadcasted bus ${busId} (${busInfo.name}-${busInfo.serialNumber}) on route ${routeId} | Host: ${responseData.host.name} | Users: ${currentlyConnectedUserCount}`
-      );
-    } catch (error) {
-      console.error("❌ Error fetching bus or host data:", error);
-    }
-  });
+  socket.on(SOCKET_EVENTS.BROADCAST_BUS_LOCATION, broadcastLocation);
 
   // 4️⃣ Handle disconnection
   socket.on("disconnect", () => {

@@ -10,21 +10,3 @@ router.post("/", validateRequest(RouteValidation.create), RouteController.addRou
 
 export const RouteRouter = router;
 
-
-// "a to b":
-//     {time, to, for, ..}
-//     {time, to, for, ..}
-//     {time, to, for, ..}
-//     {time, to, for, ..}
-// ]
-
-// {
-//     _id: 1,
-//     time: 7:00am,
-//     route: campus to mirpur,
-//     for: student,
-//     to: null,
-//     
-
-
-// }
