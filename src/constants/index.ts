@@ -47,8 +47,6 @@ export enum SCHEDULE_DIRECTIONS {
 export enum SCHEDULE_USER_TYPES {
   STUDENT = "student",
   EMPLOYEE = "employee",
-  ADMIN = "admin",
-  DRIVER = "driver",
   ALL = "all",
 }
 export enum SCHEDULE_TYPES {

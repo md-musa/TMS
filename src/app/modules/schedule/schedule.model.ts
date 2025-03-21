@@ -20,30 +20,17 @@ const scheduleSchema: Schema<ISchedule> = new Schema(
     },
     userType: {
       type: String,
-      enum: [SCHEDULE_USER_TYPES.STUDENT, SCHEDULE_USER_TYPES.FACULTY, SCHEDULE_USER_TYPES.ADMIN],
-      required: true,
-    },
-    operatingDays: {
-      type: [String], // Array of strings (days of the week)
-      enum: [
-        SCHEDULE_OPERATING_DAYS.SATURDAY,
-        SCHEDULE_OPERATING_DAYS.SUNDAY,
-        SCHEDULE_OPERATING_DAYS.MONDAY,
-        SCHEDULE_OPERATING_DAYS.TUESDAY,
-        SCHEDULE_OPERATING_DAYS.WEDNESDAY,
-        SCHEDULE_OPERATING_DAYS.THURSDAY,
-        SCHEDULE_OPERATING_DAYS.FRIDAY,
-      ],
+      enum: [SCHEDULE_USER_TYPES.STUDENT, SCHEDULE_USER_TYPES.EMPLOYEE],
       required: true,
     },
     type: {
       type: String,
-      enum: [SCHEDULE_TYPES.REGULAR, SCHEDULE_TYPES.MID_TERM, SCHEDULE_TYPES.FINAL_TERM],
+      enum: [SCHEDULE_TYPES.REGULAR, SCHEDULE_TYPES.FRIDAY, SCHEDULE_TYPES.MID_TERM, SCHEDULE_TYPES.FINAL_TERM, SCHEDULE_TYPES.RAMADAN],
       required: true,
     },
-    notes: {
+    note: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }

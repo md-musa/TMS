@@ -1,3 +1,4 @@
+import { SCHEDULE_DIRECTIONS, SCHEDULE_USER_TYPES } from "../../../constants";
 import { ISchedule } from "./schedule.interface";
 import ScheduleModel from "./schedule.model";
 
@@ -9,18 +10,17 @@ const getAllSchedules = async () => {
   return await ScheduleModel.find();
 };
 
-const getAllSchedulesByRoute = async (routeId: string, day: string) => {
-  // Fetch schedules based on routeId and day
+const getAllSchedulesByRoute = async (routeId: string, routineType: string) => {
   const schedules = await ScheduleModel.find({
     routeId,
-    operatingDays: { $in: [day] },
+    type: routineType,
   });
 
   // Group schedules into the required format
   const formattedSchedules = {
     from_campus: {
       student: [] as ISchedule[],
-      faculty: [] as ISchedule[],
+      employee: [] as ISchedule[],
     },
     to_campus: {
       student: [] as ISchedule[],
@@ -30,16 +30,16 @@ const getAllSchedulesByRoute = async (routeId: string, day: string) => {
 
   // Populate the formattedSchedules object
   schedules.forEach((schedule) => {
-    if (schedule.direction === "from_campus") {
-      if (schedule.userType === "student") {
+    if (schedule.direction === SCHEDULE_DIRECTIONS.FROM_CAMPUS) {
+      if (schedule.userType === SCHEDULE_USER_TYPES.STUDENT) {
         formattedSchedules.from_campus.student.push(schedule);
-      } else if (schedule.userType === "faculty") {
-        formattedSchedules.from_campus.faculty.push(schedule);
+      } else if (schedule.userType === SCHEDULE_USER_TYPES.EMPLOYEE) {
+        formattedSchedules.from_campus.employee.push(schedule);
       }
-    } else if (schedule.direction === "to_campus") {
-      if (schedule.userType === "student") {
+    } else if (schedule.direction === SCHEDULE_DIRECTIONS.TO_CAMPUS) {
+      if (schedule.userType === SCHEDULE_USER_TYPES.STUDENT) {
         formattedSchedules.to_campus.student.push(schedule);
-      } else if (schedule.userType === "faculty") {
+      } else if (schedule.userType === SCHEDULE_USER_TYPES.EMPLOYEE) {
         formattedSchedules.to_campus.faculty.push(schedule);
       }
     }
@@ -49,7 +49,7 @@ const getAllSchedulesByRoute = async (routeId: string, day: string) => {
   const sortByTime = (a: ISchedule, b: ISchedule) => a.time.localeCompare(b.time);
 
   formattedSchedules.from_campus.student.sort(sortByTime);
-  formattedSchedules.from_campus.faculty.sort(sortByTime);
+  formattedSchedules.from_campus.employee.sort(sortByTime);
   formattedSchedules.to_campus.student.sort(sortByTime);
   formattedSchedules.to_campus.faculty.sort(sortByTime);
 

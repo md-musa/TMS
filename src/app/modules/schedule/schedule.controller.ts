@@ -5,6 +5,7 @@ import { ScheduleService } from "./schedule.service";
 import sendResponse from "../../../shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import ApiError from "../../../errors/ApiError";
+import config from "../../../config";
 
 const create = async (req: Request, res: Response) => {
   const data: ISchedule = req.body;
@@ -37,11 +38,11 @@ const getAllSchedules = async (req: Request, res: Response) => {
 };
 
 const getAllSchedulesByRoute = async (req: Request, res: Response) => {
-  const { routeId, day } = req.query;
-  console.log("Route id ", routeId, day);
+  const { routeId } = req.query;
   if (!routeId) throw ApiError.badRequest("Route id is required");
 
-  const result = await ScheduleService.getAllSchedulesByRoute(routeId as string, day as string);
+  const routineType = config.APP_VARIABLES.ROUTINE_TYPE;
+  const result = await ScheduleService.getAllSchedulesByRoute(routeId as string, routineType);
 
   // for (let i = 0; i < result.length; i++) {
   //   result[i].time = format(parse(result[i].time, "HH:mm", new Date()), "hh:mm a");
