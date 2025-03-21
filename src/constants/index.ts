@@ -1,6 +1,7 @@
+import { format } from 'date-fns';
 export enum USER_ROLES {
   STUDENT = "student",
-  FACULTY = "faculty",
+  EMPLOYEE = "employee",
   ADMIN = "admin",
   SUPER_ADMIN = "super_admin",
 }
@@ -20,12 +21,12 @@ export enum TRIP_STATUS {
   SCHEDULED = "scheduled",
   ONGOING = "ongoing",
   COMPLETED = "completed",
-  CANCELED = "canceled",
+  CANCELED = "cancelled",
 }
 
-export enum BUS_TYPE {
+export enum BUS_TYPES {
   STUDENT = "student",
-  FACULTY = "faculty",
+  EMPLOYEE = "employee",
 }
 
 export enum SOCKET_EVENTS {
@@ -45,15 +46,17 @@ export enum SCHEDULE_DIRECTIONS {
 // userType.enum.ts
 export enum SCHEDULE_USER_TYPES {
   STUDENT = "student",
-  FACULTY = "faculty",
+  EMPLOYEE = "employee",
   ADMIN = "admin",
   DRIVER = "driver",
   ALL = "all",
 }
 export enum SCHEDULE_TYPES {
   REGULAR = "regular",
+  FRIDAY = "friday",
   MID_TERM = "mid_term",
   FINAL_TERM = "final_term",
+  RAMADAN = "ramadan",
 }
 
 export enum SCHEDULE_OPERATING_DAYS {
