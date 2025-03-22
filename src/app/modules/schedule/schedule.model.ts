@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { ISchedule } from "./schedule.interface";
-import { SCHEDULE_DIRECTIONS, SCHEDULE_OPERATING_DAYS, SCHEDULE_TYPES, SCHEDULE_USER_TYPES } from "../../../constants";
+import { SCHEDULE_DIRECTIONS, SCHEDULE_OPERATING_DAYS, SCHEDULE_MODES, SCHEDULE_USER_TYPES } from "../../../constants";
 
 const scheduleSchema: Schema<ISchedule> = new Schema(
   {
@@ -23,9 +23,14 @@ const scheduleSchema: Schema<ISchedule> = new Schema(
       enum: [SCHEDULE_USER_TYPES.STUDENT, SCHEDULE_USER_TYPES.EMPLOYEE],
       required: true,
     },
-    type: {
+    mode: {
       type: String,
-      enum: [SCHEDULE_TYPES.REGULAR, SCHEDULE_TYPES.FRIDAY, SCHEDULE_TYPES.MID_TERM, SCHEDULE_TYPES.FINAL_TERM, SCHEDULE_TYPES.RAMADAN],
+      enum: [SCHEDULE_MODES.REGULAR, SCHEDULE_MODES.MID_TERM, SCHEDULE_MODES.FINAL_TERM, SCHEDULE_MODES.RAMADAN],
+      required: true,
+    },
+    operatingDays: {
+      type: String,
+      enum: [SCHEDULE_OPERATING_DAYS.WEEKDAYS, SCHEDULE_OPERATING_DAYS.FRIDAY],
       required: true,
     },
     note: {

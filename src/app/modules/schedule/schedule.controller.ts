@@ -1,3 +1,4 @@
+import { SCHEDULE_OPERATING_DAYS } from "./../../../constants/index";
 import { Request, Response } from "express";
 import { ISchedule } from "./schedule.interface";
 import { format, parse } from "date-fns";
@@ -6,6 +7,7 @@ import sendResponse from "../../../shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import ApiError from "../../../errors/ApiError";
 import config from "../../../config";
+import { SCHEDULE_MODES } from "../../../constants";
 
 const create = async (req: Request, res: Response) => {
   const data: ISchedule = req.body;
@@ -38,11 +40,13 @@ const getAllSchedules = async (req: Request, res: Response) => {
 };
 
 const getAllSchedulesByRoute = async (req: Request, res: Response) => {
-  const { routeId } = req.query;
+  let { routeId, day } = req.query;
   if (!routeId) throw ApiError.badRequest("Route id is required");
 
-  const routineType = config.APP_VARIABLES.ROUTINE_TYPE;
-  const result = await ScheduleService.getAllSchedulesByRoute(routeId as string, routineType);
+  const scheduleMode = config.APP_VARIABLES.SCHEDULE_MODE;
+  if (day !== SCHEDULE_OPERATING_DAYS.FRIDAY) day = SCHEDULE_OPERATING_DAYS.WEEKDAYS;
+
+  const result = await ScheduleService.getAllSchedulesByRoute(routeId as string, scheduleMode, day);
 
   // for (let i = 0; i < result.length; i++) {
   //   result[i].time = format(parse(result[i].time, "HH:mm", new Date()), "hh:mm a");

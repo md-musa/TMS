@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 export enum USER_ROLES {
   STUDENT = "student",
   EMPLOYEE = "employee",
@@ -49,20 +48,13 @@ export enum SCHEDULE_USER_TYPES {
   EMPLOYEE = "employee",
   ALL = "all",
 }
-export enum SCHEDULE_TYPES {
+export enum SCHEDULE_MODES {
   REGULAR = "regular",
-  FRIDAY = "friday",
   MID_TERM = "mid_term",
   FINAL_TERM = "final_term",
   RAMADAN = "ramadan",
 }
-
 export enum SCHEDULE_OPERATING_DAYS {
-  SATURDAY = "saturday",
-  SUNDAY = "sunday",
-  MONDAY = "monday",
-  TUESDAY = "tuesday",
-  WEDNESDAY = "wednesday",
-  THURSDAY = "thursday",
-  FRIDAY = "friday",
+  WEEKDAYS = "weekdays", // Regular working days
+  FRIDAY = "friday", // Special Friday schedule
 }

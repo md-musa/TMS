@@ -24,6 +24,6 @@ export default {
     REFRESH_TOKEN_LIFE: process.env.REFRESH_TOKEN_LIFE,
   },
   APP_VARIABLES: {
-    ROUTINE_TYPE: process.env.ROUTINE_TYPE,
+    SCHEDULE_MODE: process.env.SCHEDULE_MODE,
   },
 };

@@ -10,10 +10,11 @@ const getAllSchedules = async () => {
   return await ScheduleModel.find();
 };
 
-const getAllSchedulesByRoute = async (routeId: string, routineType: string) => {
+const getAllSchedulesByRoute = async (routeId: string, scheduleMode: string, day: string) => {
   const schedules = await ScheduleModel.find({
     routeId,
-    type: routineType,
+    mode: scheduleMode,
+    operatingDays: day,
   });
 
   // Group schedules into the required format
