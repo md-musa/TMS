@@ -47,7 +47,7 @@ const registerUser = async (userInfo: IUser) => {
     REFRESH_TOKEN_LIFE
   );
 
-  return { accessToken, refreshToken, user: { name, email, role, phoneNumber, routeId } };
+  return { accessToken, refreshToken, user: {_id, name, email, role, phoneNumber, routeId } };
 };
 
 const login = async (userInfo: { email: string; password: string }) => {
@@ -81,7 +81,7 @@ const login = async (userInfo: { email: string; password: string }) => {
     REFRESH_TOKEN_LIFE
   );
 
-  return { accessToken, refreshToken, user: { name, email, role, phoneNumber, routeId } };
+  return { accessToken, refreshToken, user: {_id, name, email, role, phoneNumber, routeId } };
 };
 
 const getProfileInfo = async (userId: string) => {

@@ -25,7 +25,7 @@ const getAllSchedulesByRoute = async (routeId: string, scheduleMode: string, day
     },
     to_campus: {
       student: [] as ISchedule[],
-      faculty: [] as ISchedule[],
+      employee: [] as ISchedule[],
     },
   };
 
@@ -41,7 +41,7 @@ const getAllSchedulesByRoute = async (routeId: string, scheduleMode: string, day
       if (schedule.userType === SCHEDULE_USER_TYPES.STUDENT) {
         formattedSchedules.to_campus.student.push(schedule);
       } else if (schedule.userType === SCHEDULE_USER_TYPES.EMPLOYEE) {
-        formattedSchedules.to_campus.faculty.push(schedule);
+        formattedSchedules.to_campus.employee.push(schedule);
       }
     }
   });
@@ -52,7 +52,7 @@ const getAllSchedulesByRoute = async (routeId: string, scheduleMode: string, day
   formattedSchedules.from_campus.student.sort(sortByTime);
   formattedSchedules.from_campus.employee.sort(sortByTime);
   formattedSchedules.to_campus.student.sort(sortByTime);
-  formattedSchedules.to_campus.faculty.sort(sortByTime);
+  formattedSchedules.to_campus.employee.sort(sortByTime);
 
   return formattedSchedules;
 };
