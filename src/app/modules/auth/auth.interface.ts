@@ -4,7 +4,7 @@ import { USER_ROLES } from "../../../constants";
 export interface IUser{
     name: string;
     email: string;
-    role: USER_ROLES.ADMIN | USER_ROLES.FACULTY | USER_ROLES.STUDENT | USER_ROLES.SUPER_ADMIN;
+    role: USER_ROLES.ADMIN | USER_ROLES.EMPLOYEE | USER_ROLES.STUDENT | USER_ROLES.SUPER_ADMIN;
     password: string;
     phoneNumber: string;
     houseLocation: {
